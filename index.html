@@ -200,7 +200,7 @@
           const totalPrice = computed(() => {
             return displayUnitPriceEntries.value.reduce((p, c) => {
               return (p += c.totalPrice || 0);
-            }, 0).toFixed(2);
+            }, 0).toFixed(0);
           });
 
           const clearPrice = () => {
