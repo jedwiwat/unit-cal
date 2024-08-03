@@ -88,7 +88,7 @@
           :key="i"
           class="unitPriceEntry form-row align-items-center mb-3"
         >
-          <div class="col-auto">
+          <div class="col-3">
             <label>Menu Name:</label>
             <input
               type="text"
@@ -97,7 +97,7 @@
               disabled
             />
           </div>
-          <div class="col-auto">
+          <div class="col-3">
             <label>Amount:</label>
             <input
               type="number"
@@ -105,7 +105,7 @@
               class="form-control"
             />
           </div>
-          <div class="col-auto">
+          <div class="col-3">
             <label>Unit:</label>
             <select :value="entry.unitType" class="form-control" disabled>
               <option value="kg">Kilograms</option>
@@ -113,7 +113,7 @@
               <option value="l">Liters</option>
             </select>
           </div>
-          <div class="col-auto">
+          <div class="col-3">
             <label>Price (Baht):</label>
             <input
               type="number"
