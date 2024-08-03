@@ -127,15 +127,6 @@
 
       <div class="my-4">
         <h2>Calculated Prices</h2>
-        <ul class="list-group">
-          <li
-            v-for="(price, index) in calculatedPrices"
-            :key="index"
-            class="list-group-item"
-          >
-            {{ price }}
-          </li>
-        </ul>
         <h3 class="mt-3">Total Price: <span>{{ totalPrice }}</span> Baht</h3>
       </div>
 
@@ -150,9 +141,6 @@
       createApp({
         setup() {
           const unitPriceEntries = ref([]);
-          const inputUnitType = ref("kg");
-          const inputAmount = ref(null);
-          const calculatedPrices = ref([]);
 
           const displayUnitPriceEntries = ref([]);
 
@@ -208,35 +196,6 @@
             }
           };
 
-          // const calculatePrice = () => {
-          //   const unitPrices = unitPriceEntries.value;
-          //   let calculatedPrice = 0;
-
-          //   for (let i = 0; i < unitPrices.length; i++) {
-          //     if (
-          //       unitPrices[i].unitType === inputUnitType.value &&
-          //       unitPrices[i].amount === parseFloat(inputAmount.value)
-          //     ) {
-          //       calculatedPrice = unitPrices[i].price;
-          //       break;
-          //     }
-          //   }
-
-          //   if (calculatedPrice > 0) {
-          //     const priceString = `${inputAmount.value} ${inputUnitType.value} = ${calculatedPrice} Baht`;
-          //     calculatedPrices.value.push(priceString);
-          //     updateTotalPrice(calculatedPrice);
-          //   } else {
-          //     alert("Unit price not found for the given unit and amount.");
-          //   }
-          // };
-
-          // const updateTotalPrice = (newPrice) => {
-          //   totalPrice.value = (
-          //     parseFloat(totalPrice.value) + newPrice
-          //   ).toFixed(2);
-          // };
-
           const totalPrice = computed(() => {
             return displayUnitPriceEntries.value.reduce((p, c) => {
               return (p += c.totalPrice || 0);
@@ -249,13 +208,9 @@
 
           return {
             unitPriceEntries,
-            inputUnitType,
-            inputAmount,
-            calculatedPrices,
             addUnitPriceEntry,
             removeUnitPriceEntry,
             saveUnitPrices,
-            // calculatePrice,
             displayUnitPriceEntries,
             totalPrice,
             clearPrice,
