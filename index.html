@@ -8,130 +8,166 @@
       href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
       rel="stylesheet"
     />
+
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/element-plus/dist/index.css"
+    />
+
     <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/element-plus"></script>
   </head>
   <body>
     <div id="app" class="container">
       <h1 class="my-4">Unit Price Calculator</h1>
 
-      <div>
-        <div class="p-2 bg-light">
-          <a
-            data-toggle="collapse"
-            href="#unitPriceSection"
-            role="button"
-            aria-expanded="false"
-            aria-controls="unitPriceSection"
-          >
-            <h2>Set Unit Prices</h2></a
-          >
-        </div>
-        <div class="collapse" id="unitPriceSection">
-          <div
-            v-for="(entry, index) in unitPriceEntries"
-            :key="index"
-            class="unitPriceEntry form-row align-items-center mb-3"
-          >
-            <div class="col-auto">
-              <label>Menu Name:</label>
-              <input
-                type="text"
-                v-model="entry.menuName"
-                class="form-control"
-              />
-            </div>
-            <div class="col-auto">
-              <label>Amount:</label>
-              <input
-                type="number"
-                v-model="entry.amount"
-                class="form-control"
-              />
-            </div>
-            <div class="col-auto">
-              <label>Unit:</label>
-              <select v-model="entry.unitType" class="form-control">
-                <option value="kg">Kilograms</option>
-                <option value="g">Grams</option>
-                <option value="l">Liters</option>
-              </select>
-            </div>
-            <div class="col-auto">
-              <label>Price (Baht):</label>
-              <input type="number" v-model="entry.price" class="form-control" />
-            </div>
-            <div class="col-auto">
-              <button
-                class="btn btn-danger mt-4"
-                @click="removeUnitPriceEntry(index)"
+      <el-tabs v-model="activeName" class="tabs">
+        <el-tab-pane label="Units" name="units">
+          <div>
+            <h2>Set Units</h2>
+            <div>
+              <label for="tags-basic"
+                >Type a new unit and press enter (auto save)</label
               >
-                Remove
+              <el-select
+                v-model="units"
+                multiple
+                filterable
+                allow-create
+                default-first-option
+                :reserve-keyword="false"
+                placeholder="Units"
+              >
+                <el-option
+                  v-for="item in units"
+                  :key="item"
+                  :label="item"
+                  :value="item"
+                />
+              </el-select>
+            </div></div
+        ></el-tab-pane>
+        <el-tab-pane
+          label="Unit Prices"
+          name="unitPrices"
+          v-if="units.length > 0"
+          ><div>
+            <h2>Set Unit Prices</h2>
+            <div
+              v-for="(entry, index) in unitPriceEntries"
+              :key="index"
+              class="unitPriceEntry form-row mx-0 align-items-center mb-3"
+            >
+              <div class="col-auto">
+                <label>Menu Name:</label>
+                <input
+                  type="text"
+                  v-model="entry.menuName"
+                  class="form-control"
+                />
+              </div>
+              <div class="col-auto">
+                <label>Amount:</label>
+                <input
+                  type="number"
+                  v-model="entry.amount"
+                  class="form-control"
+                />
+              </div>
+              <div class="col-auto">
+                <label>Unit:</label>
+                <select v-model="entry.unitType" class="form-control">
+                  <option v-for="unit in units" :value="unit">{{unit}}</option>
+                </select>
+              </div>
+              <div class="col-auto">
+                <label>Price (Baht):</label>
+                <input
+                  type="number"
+                  v-model="entry.price"
+                  class="form-control"
+                />
+              </div>
+              <div class="col-auto">
+                <button
+                  class="btn btn-danger mt-4"
+                  @click="removeUnitPriceEntry(index)"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+            <div class="d-flex" style="column-gap: 8px">
+              <button class="btn btn-primary" @click="addUnitPriceEntry">
+                Add Another Unit Price
+              </button>
+              <button class="btn btn-success" @click="saveUnitPrices">
+                Save Unit Prices
               </button>
             </div>
-          </div>
-          <div class="d-flex" style="column-gap: 8px">
-            <button class="btn btn-primary" @click="addUnitPriceEntry">
-              Add Another Unit Price
-            </button>
-            <button class="btn btn-success" @click="saveUnitPrices">
-              Save Unit Prices
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <div class="my-4">
-        <h2>Input Amount</h2>
-
-        <div
-          v-for="(entry, i) in displayUnitPriceEntries"
-          :key="i"
-          class="unitPriceEntry form-row align-items-center mb-3"
+          </div></el-tab-pane
         >
-          <div class="col-3">
-            <label>Menu Name:</label>
-            <input
-              type="text"
-              v-model="entry.menuName"
-              class="form-control"
-              disabled
-            />
-          </div>
-          <div class="col-3">
-            <label>Amount:</label>
-            <input
-              type="number"
-              v-model="entry.totalAmount"
-              class="form-control"
-            />
-          </div>
-          <div class="col-3">
-            <label>Unit:</label>
-            <select :value="entry.unitType" class="form-control" disabled>
-              <option value="kg">Kilograms</option>
-              <option value="g">Grams</option>
-              <option value="l">Liters</option>
-            </select>
-          </div>
-          <div class="col-3">
-            <label>Price (Baht):</label>
-            <input
-              type="number"
-              v-model="entry.totalPrice"
-              class="form-control"
-              readonly
-            />
-          </div>
-        </div>
-      </div>
+        <el-tab-pane
+          label="Calculator"
+          name="calculator"
+          v-if="units.length > 0 && unitPriceEntries.length > 0"
+        >
+          <h2>Item Amount</h2>
 
-      <div class="my-4">
-        <h3 class="mt-3">
-          Total Price: <span class="text-success">{{ totalPrice }}</span> Baht
-        </h3>
-      </div>
+          <div class="form">
+            <div
+              v-for="(entry, i) in displayUnitPriceEntries"
+              :key="i"
+              class="unitPriceEntry form-row mx-0 align-items-center mb-3"
+            >
+              <div class="col-3">
+                <label>Menu Name:</label>
+                <input
+                  type="text"
+                  v-model="entry.menuName"
+                  class="form-control"
+                  disabled
+                />
+              </div>
+              <div class="col-3">
+                <label>Amount:</label>
+                <input
+                  type="number"
+                  v-model="entry.totalAmount"
+                  class="form-control"
+                />
+              </div>
+              <div class="col-3">
+                <label>Unit:</label>
+                <select :value="entry.unitType" class="form-control" disabled>
+                  <option v-for="unit in units" :value="unit">{{unit}}</option>
+                </select>
+              </div>
+              <div class="col-3">
+                <label>Price (Baht):</label>
+                <input
+                  type="number"
+                  v-model="entry.totalPrice"
+                  class="form-control"
+                  readonly
+                />
+              </div>
+            </div>
+          </div>
 
-      <button class="btn btn-danger" @click="clearPrice">Clear Price</button>
+          <div class="my-4">
+            <h3 class="mt-3">
+              Total Price:
+              <span class="text-success">{{ totalPrice }}</span> Baht
+            </h3>
+          </div>
+
+          <button class="btn btn-danger" @click="clearPrice">
+            Clear Price
+          </button>
+        </el-tab-pane>
+      </el-tabs>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
@@ -141,10 +177,21 @@
 
       createApp({
         setup() {
+          const activeName = ref("units");
+          const units = ref([]);
           const unitPriceEntries = ref([]);
-
           const displayUnitPriceEntries = ref([]);
 
+          onMounted(() => {
+            setUnits();
+            setUnitPrices();
+            setDisplayUnitPrices();
+            setActiveTab();
+          });
+
+          watch(units, (newV) => {
+            localStorage.setItem("units", JSON.stringify(newV));
+          });
           watch(
             displayUnitPriceEntries,
             (newV) => {
@@ -158,17 +205,28 @@
             { deep: true },
           );
 
+          const setActiveTab = () => {
+            if (units.value.length === 0) {
+              activeName.value = "units";
+            } else if (unitPriceEntries.value.length === 0) {
+              activeName.value = "unitPrices";
+            } else {
+              activeName.value = "calculator";
+            }
+          };
           const setDisplayUnitPrices = () => {
             displayUnitPriceEntries.value =
               JSON.parse(localStorage.getItem("unitPrices")) || [];
           };
 
-          onMounted(() => {
+          const setUnits = () => {
+            units.value = JSON.parse(localStorage.getItem("units")) || [];
+          };
+
+          const setUnitPrices = () => {
             unitPriceEntries.value =
               JSON.parse(localStorage.getItem("unitPrices")) || [];
-
-            setDisplayUnitPrices();
-          });
+          };
 
           const addUnitPriceEntry = () => {
             unitPriceEntries.value.push({
@@ -187,20 +245,17 @@
             const unitPrices = unitPriceEntries.value
               .filter((entry) => entry.unitType && entry.amount && entry.price)
               .map((v, index) => ({ ...v, index }));
-
-            if (unitPrices.length > 0) {
-              localStorage.setItem("unitPrices", JSON.stringify(unitPrices));
-              clearPrice();
-              alert("Unit prices saved!");
-            } else {
-              alert("Please enter valid unit types, amounts, and prices.");
-            }
+            localStorage.setItem("unitPrices", JSON.stringify(unitPrices));
+            clearPrice();
+            alert("Unit prices saved!");
           };
 
           const totalPrice = computed(() => {
-            return displayUnitPriceEntries.value.reduce((p, c) => {
-              return (p += c.totalPrice || 0);
-            }, 0).toFixed(0);
+            return displayUnitPriceEntries.value
+              .reduce((p, c) => {
+                return (p += c.totalPrice || 0);
+              }, 0)
+              .toFixed(0);
           });
 
           const clearPrice = () => {
@@ -215,9 +270,13 @@
             displayUnitPriceEntries,
             totalPrice,
             clearPrice,
+            units,
+            activeName,
           };
         },
-      }).mount("#app");
+      })
+        .use(ElementPlus)
+        .mount("#app");
     </script>
   </body>
 </html>
