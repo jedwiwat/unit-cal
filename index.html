@@ -5,176 +5,174 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Unit Price Calculator</title>
     <link
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-
-    <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/element-plus/dist/index.css"
     />
-
     <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
-
     <script src="https://cdn.jsdelivr.net/npm/element-plus"></script>
+
+    <style>
+      .container {
+        max-width: 1140px;
+        margin: 0 auto;
+        padding: 0 15px; /* Optional: to add some padding inside the container */
+      }
+    </style>
   </head>
   <body>
     <div id="app" class="container">
-      <h1 class="my-4">Unit Price Calculator</h1>
-
-      <el-tabs v-model="activeName" class="tabs">
-        <el-tab-pane label="Units" name="units">
-          <div>
-            <h2>Set Units</h2>
+      <div>
+        <h1 class="my-4">Unit Price Calculator</h1>
+        <el-tabs v-model="activeName" class="tabs">
+          <el-tab-pane label="Units" name="units">
             <div>
-              <label for="tags-basic"
-                >Type a new unit and press enter (auto save)</label
-              >
-              <el-select
-                v-model="units"
-                multiple
-                filterable
-                allow-create
-                default-first-option
-                :reserve-keyword="false"
-                placeholder="Units"
-              >
-                <el-option
-                  v-for="item in units"
-                  :key="item"
-                  :label="item"
-                  :value="item"
-                />
-              </el-select>
-            </div></div
-        ></el-tab-pane>
-        <el-tab-pane
-          label="Unit Prices"
-          name="unitPrices"
-          v-if="units.length > 0"
-          ><div>
-            <h2>Set Unit Prices</h2>
-            <div
-              v-for="(entry, index) in unitPriceEntries"
-              :key="index"
-              class="unitPriceEntry form-row mx-0 align-items-center mb-3"
-            >
-              <div class="col-auto">
-                <label>Menu Name:</label>
-                <input
-                  type="text"
-                  v-model="entry.menuName"
-                  class="form-control"
-                />
-              </div>
-              <div class="col-auto">
-                <label>Amount:</label>
-                <input
-                  type="number"
-                  v-model="entry.amount"
-                  class="form-control"
-                />
-              </div>
-              <div class="col-auto">
-                <label>Unit:</label>
-                <select v-model="entry.unitType" class="form-control">
-                  <option v-for="unit in units" :value="unit">{{unit}}</option>
-                </select>
-              </div>
-              <div class="col-auto">
-                <label>Price (Baht):</label>
-                <input
-                  type="number"
-                  v-model="entry.price"
-                  class="form-control"
-                />
-              </div>
-              <div class="col-auto">
-                <button
-                  class="btn btn-danger mt-4"
-                  @click="removeUnitPriceEntry(index)"
+              <h2>Set Units</h2>
+              <div>
+                <label for="tags-basic">
+                  Type a new unit and press enter (auto save)
+                </label>
+                <el-select
+                  v-model="units"
+                  multiple
+                  filterable
+                  allow-create
+                  default-first-option
+                  :reserve-keyword="false"
+                  placeholder="Units"
                 >
-                  Remove
-                </button>
+                  <el-option
+                    v-for="item in units"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  />
+                </el-select>
               </div>
             </div>
-            <div class="d-flex" style="column-gap: 8px">
-              <button class="btn btn-primary" @click="addUnitPriceEntry">
-                Add Another Unit Price
-              </button>
-              <button class="btn btn-success" @click="saveUnitPrices">
-                Save Unit Prices
-              </button>
+          </el-tab-pane>
+          <el-tab-pane
+            label="Unit Prices"
+            name="unitPrices"
+            v-if="units.length > 0"
+          >
+            <div>
+              <h2>Set Unit Prices</h2>
+              <div
+                v-for="(entry, index) in unitPriceEntries"
+                :key="index"
+                class="unitPriceEntry"
+              >
+                <el-row :gutter="20" type="flex" align="middle" class="mb-3">
+                  <el-col :span="5">
+                    <el-form-item label="Menu Name:">
+                      <el-input v-model="entry.menuName"></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="5">
+                    <el-form-item label="Amount:">
+                      <el-input type="number" v-model="entry.amount"></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="5">
+                    <el-form-item label="Unit:">
+                      <el-select v-model="entry.unitType">
+                        <el-option
+                          v-for="unit in units"
+                          :key="unit"
+                          :label="unit"
+                          :value="unit"
+                        ></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="5">
+                    <el-form-item label="Price (Baht):">
+                      <el-input type="number" v-model="entry.price"></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="4">
+                    <el-button
+                      type="danger"
+                      @click="removeUnitPriceEntry(index)"
+                      >Remove</el-button
+                    >
+                  </el-col>
+                </el-row>
+              </div>
+              <div class="d-flex" style="column-gap: 8px">
+                <el-button type="primary" @click="addUnitPriceEntry"
+                  >Add Another Unit Price</el-button
+                >
+                <el-button type="success" @click="saveUnitPrices"
+                  >Save Unit Prices</el-button
+                >
+              </div>
             </div>
-          </div></el-tab-pane
-        >
-        <el-tab-pane
-          label="Calculator"
-          name="calculator"
-          v-if="units.length > 0 && unitPriceEntries.length > 0"
-        >
-          <h2>Item Amount</h2>
-
-          <div class="form">
-            <div
-              v-for="(entry, i) in displayUnitPriceEntries"
-              :key="i"
-              class="unitPriceEntry form-row mx-0 align-items-center mb-3"
-            >
-              <div class="col-3">
-                <label>Menu Name:</label>
-                <input
-                  type="text"
-                  v-model="entry.menuName"
-                  class="form-control"
-                  disabled
-                />
-              </div>
-              <div class="col-3">
-                <label>Amount:</label>
-                <input
-                  type="number"
-                  v-model="entry.totalAmount"
-                  class="form-control"
-                />
-              </div>
-              <div class="col-3">
-                <label>Unit:</label>
-                <select :value="entry.unitType" class="form-control" disabled>
-                  <option v-for="unit in units" :value="unit">{{unit}}</option>
-                </select>
-              </div>
-              <div class="col-3">
-                <label>Price (Baht):</label>
-                <input
-                  type="number"
-                  v-model="entry.totalPrice"
-                  class="form-control"
-                  readonly
-                />
+          </el-tab-pane>
+          <el-tab-pane
+            label="Calculator"
+            name="calculator"
+            v-if="units.length > 0 && unitPriceEntries.length > 0"
+          >
+            <h2>Item Amount</h2>
+            <div>
+              <div
+                v-for="(entry, i) in displayUnitPriceEntries"
+                :key="i"
+                class="unitPriceEntry"
+              >
+                <el-row :gutter="20" type="flex" align="middle" class="mb-3">
+                  <el-col :span="6">
+                    <el-form-item label="Menu Name:">
+                      <el-input v-model="entry.menuName" disabled></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-form-item label="Amount:">
+                      <el-input
+                        type="number"
+                        v-model="entry.totalAmount"
+                      ></el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-form-item label="Unit:">
+                      <el-select :model-value="entry.unitType" disabled>
+                        <el-option
+                          v-for="unit in units"
+                          :key="unit"
+                          :label="unit"
+                          :value="unit"
+                        ></el-option>
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-form-item label="Price (Baht):">
+                      <el-input
+                        type="number"
+                        v-model="entry.totalPrice"
+                        readonly
+                      ></el-input>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
               </div>
             </div>
-          </div>
-
-          <div class="my-4">
-            <h3 class="mt-3">
-              Total Price:
-              <span class="text-success">{{ totalPrice }}</span> Baht
-            </h3>
-          </div>
-
-          <button class="btn btn-danger" @click="clearPrice">
-            Clear Price
-          </button>
-        </el-tab-pane>
-      </el-tabs>
+            <div class="my-4">
+              <h3 class="mt-3">
+                Total Price:
+                <el-text class="mx-1" type="success">{{ totalPrice }}</el-text>
+                Baht
+              </h3>
+            </div>
+            <el-button type="danger" @click="clearPrice">Clear Price</el-button>
+          </el-tab-pane>
+        </el-tabs>
+      </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script>
       const { createApp, ref, onMounted, watch, computed } = Vue;
-
       createApp({
         setup() {
           const activeName = ref("units");
@@ -214,6 +212,7 @@
               activeName.value = "calculator";
             }
           };
+
           const setDisplayUnitPrices = () => {
             displayUnitPriceEntries.value =
               JSON.parse(localStorage.getItem("unitPrices")) || [];
